@@ -5,26 +5,6 @@
  *  Author: vlast
  */ 
 
-// Protokol:
-// princip DOTAZ - ODPOVÌÏ
-// Formát zprávy dotazu   (master): $[ADDRESS];[COMMAND];[DATA - volitelnì];[CHECKSUM]\n
-// Formát zprávy odpovìdi (slave):  $[ADDRESS];[COMMAND];[DATA - volitelnì];[CHECKSUM]\n
-// Slave odpovídá vždy - potrvrzuje pøíjem
-// znak $ je vyhrazen pro zaèátek zprávy - nepoužívat jinde!!! --- a co CRC? - pokud CRC vyjde $ nahradí se ?
-// znak ; je vyhrazem jako odìlovaè - nepoužívat jinde!!! --- a co CRC?- pokud CRC vyjde ; nahradí se ?
-// maxmální délka jedné zprávy je 54 znakù
-
-// START    - 1 znak $
-// ADDRESS  - max délka 8 znakù
-// COMMAND  - max délka 8 znakù
-// DATA     - max délka 32 znakù
-// CHECKSUM - 1 znak
-// STOP		- 1 znak \n
-
-// Pøíklad:
-// $DHT_1;LEDSET;Î\n, Hercules: $$DHT_1;LEDSET;Î<LF>
-// $DHT_1;LEDCLR;Ã\n, Hercules: $$DHT_1;LEDCLR;Ã<LF>
-
 #include <Arduino.h>
 #include "ambus.h"
 
@@ -63,13 +43,13 @@ AMBUS::AMBUS(String myAddress)
 
 void AMBUS::serialEventHandler()
 {
-	//pokud data nejsou pøeètená tak nepøijímat další
+	//pokud data nejsou pÃ¸eÃ¨tenÃ¡ tak nepÃ¸ijÃ­mat dalÅ¡Ã­
 	if(dataReady == true) return;
 	
-	//naèíst znak z linky
+	//naÃ¨Ã­st znak z linky
 	char inChar = (char)Serial.read();
 	
-	if(receiving == false)		//ještì nejsem v pøijímacím módu
+	if(receiving == false)		//jeÅ¡tÃ¬ nejsem v pÃ¸ijÃ­macÃ­m mÃ³du
 	{
 		if(inChar == START_OF_PACKET)
 		{
@@ -79,21 +59,21 @@ void AMBUS::serialEventHandler()
 			return;
 		}
 	}
-	else						//pøijímací mód
+	else						//pÃ¸ijÃ­macÃ­ mÃ³d
 	{
-		if(inChar == START_OF_PACKET) //detekován nový SOP
+		if(inChar == START_OF_PACKET) //detekovÃ¡n novÃ½ SOP
 		{
 			dataPacket = "";
 		}
 		dataPacket += inChar;
-		if(dataPacket.length() >= PACKET_SIZE) //pøekroèena maximální délka zprávy
+		if(dataPacket.length() >= PACKET_SIZE) //pÃ¸ekroÃ¨ena maximÃ¡lnÃ­ dÃ©lka zprÃ¡vy
 		{
 			receiving = false;
 			return;
 		}
-		if(inChar == END_OF_PACKET)	//detekován EOP
+		if(inChar == END_OF_PACKET)	//detekovÃ¡n EOP
 		{
-			stringParser();			//analýza zprávy
+			stringParser();			//analÃ½za zprÃ¡vy
 			if(crc[0] != checksum( dataPacket , dataPacket.length()-1-CRC_SIZE ) ) //kontrola checksum
 			{
 				#ifdef AMBUS_DEBUG
@@ -120,7 +100,7 @@ void AMBUS::serialEventHandler()
 				receiving = false;
 				return;
 			}
-			dataReady = true;	//pokud se dostanu až jsem jsou data v poøádku a pøipravena k pøedání
+			dataReady = true;	//pokud se dostanu aÅ¾ jsem jsou data v poÃ¸Ã¡dku a pÃ¸ipravena k pÃ¸edÃ¡nÃ­
 			receiving = false;
 		}
 	}
@@ -237,75 +217,3 @@ char AMBUS::checksum(String data, unsigned int count)
 	if((char)sum == SEPARATOR)			return '\x1A';	//osetreni zakazaneho znaku
 	else return (char)sum;
 }
-
-//void AMBUS::serialEventHandler()
-//{
-////pokud data nejsou pøeètená tak nepøijímat další
-//if(dataReady == true) return;
-//
-//char inChar = (char)Serial.read();
-//
-//switch (state)
-//{
-//case IDLE:
-//if(inChar == START_OF_PACKET)
-//{
-//state = READ;
-//dataPacket = "";
-//dataPacket += inChar;
-//}
-//break;
-//
-//case READ:
-//if(inChar == START_OF_PACKET)
-//{
-//dataPacket = "";
-//}
-//dataPacket += inChar;
-//if(dataPacket.length() >= PACKET_SIZE)
-//{
-//state = IDLE;
-//}
-//if(inChar == END_OF_PACKET)
-//{
-////input string parsing
-//stringParser();
-//
-////crc check !!!zvážit úpravu!!!
-//if(crc[0] != checksum( dataPacket , dataPacket.length()-1-CRC_SIZE ) )
-//{
-//#ifdef AMBUS_DEBUG
-//Serial.print("CRC NOT MATCH: ");
-//Serial.println(checksum( dataPacket , dataPacket.length()-(1+CRC_SIZE) ));
-//#endif
-//address = "";
-//command = "";
-//data = "";
-//crc = "";
-//state = IDLE;
-//break;
-//}
-//
-////address check
-//if(address != deviceAddress)
-//{
-//#ifdef AMBUS_DEBUG
-//Serial.println("ADDRESS NOT MATCH");
-//#endif
-//address = "";
-//command = "";
-//data = "";
-//crc = "";
-//state = IDLE;
-//break;
-//}
-//
-//dataReady = true;
-//state = IDLE;
-//}
-//break;
-//
-//default:
-//break;
-//}
-//}
