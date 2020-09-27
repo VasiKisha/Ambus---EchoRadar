@@ -15,3 +15,15 @@
 - SG90:PWM(orange)  Arduino:4
 - SG90:+5V(red)     Arduino:5V
 - SG90:GND(brown)   Arduino:GND
+
+## Ambus Commands
+|Command|Description                |
+|:-----:|:-------------------------:|
+| DEV?  | get device description    |
+| FW?   | get firmware version      |
+| An?   | get servo angle           |
+| An    | set servo angle           |
+| Dur?  | get duration of echo ping |
+| Dis?  | get distance to obstacle  |
+
+Device address: ECHO1
