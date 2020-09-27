@@ -2,7 +2,7 @@
  * ambus.h
  *
  * Created: 02.07.2016 9:15:07
- *  Author: vlast
+ *  Author: VasiKisha
  */ 
 
 #ifndef AMBUS_H_
@@ -13,12 +13,12 @@ class AMBUS
 	public:	
 		AMBUS(String myAddress);
 		
-		void serialEventHandler();				//umístit do serialEvent() - stará se o pøíjem bajtù, rozpoznávání SOP a EOP, analýzu pøijaté zprávy, kontrolu CRC a kontrolu adresy
-		boolean dataReceived();					//True = nová zpráva, False = není nová zpráva
-		String getCommand();					//vrátí command z pøijatého paketu
-		String getData();						//vrátí data z pøijatého paketu
-		void notacknowledge();					//nepotvrzuji pøíjem zprávy
-		void acknowledge(String answer = "");	//potvrzuji pøijetí zprávy, volitelnì lze pøipojit data;
+		void serialEventHandler();				//use in serialEvent() - handles byte receiving, catching SOP and EOP, message analysis, CRC check and Address check
+		boolean dataReceived();					//True = new message is ready to pickup, False = no new message
+		String getCommand();					//returns command from received message
+		String getData();						//returns data from received message
+		void notacknowledge();					//do not acknoledge message
+		void acknowledge(String answer = "");	//message is acknowledged, optionally data can be included
 		
 	private:
 		boolean receiving;						//receinving flag

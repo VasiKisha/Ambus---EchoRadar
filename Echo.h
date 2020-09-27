@@ -2,7 +2,7 @@
  * Echo.h
  *
  * Created: 16.07.2016 11:56:22
- *  Author: vlast
+ *  Author: VasiKisha
  */ 
 
 #include "Servo.h"

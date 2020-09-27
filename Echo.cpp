@@ -2,7 +2,7 @@
  * Echo.cpp
  *
  * Created: 16.07.2016 11:56:36
- *  Author: vlast
+ *  Author: VasiKisha
  */ 
 #include <Arduino.h>
 #include "Echo.h"
