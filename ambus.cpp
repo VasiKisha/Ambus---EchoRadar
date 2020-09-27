@@ -3,12 +3,12 @@
  *
  * Created: 02.07.2016 9:13:05
  * Author: VasiKisha
- */ 
+ */
 
 #include <Arduino.h>
 #include "ambus.h"
 
-//#define AMBUS_DEBUG
+ //#define AMBUS_DEBUG
 
 #define MASTER_ADDRESS "MASTER"
 
@@ -24,199 +24,199 @@
 
 AMBUS::AMBUS(String myAddress)
 {
-	dataPacket.reserve(PACKET_SIZE);
-	address.reserve(ADDRESS_SIZE);
-	command.reserve(COMMAND_SIZE);
-	data.reserve(DATA_SIZE);
-	crc.reserve(CRC_SIZE);
-		
-	deviceAddress = myAddress;
-	dataPacket = "";
-	address = "";
-	command = "";
-	data = "";
-	crc = "";
-		
-	receiving = false;
-	dataReady = false;
+    dataPacket.reserve(PACKET_SIZE);
+    address.reserve(ADDRESS_SIZE);
+    command.reserve(COMMAND_SIZE);
+    data.reserve(DATA_SIZE);
+    crc.reserve(CRC_SIZE);
+
+    deviceAddress = myAddress;
+    dataPacket = "";
+    address = "";
+    command = "";
+    data = "";
+    crc = "";
+
+    receiving = false;
+    dataReady = false;
 }
 
 void AMBUS::serialEventHandler()
 {
     //if no data ready, skip
-	if(dataReady == true) return;
-	
-	//read character 
-	char inChar = (char)Serial.read();
-	
+    if (dataReady == true) return;
+
+    //read character 
+    char inChar = (char)Serial.read();
+
     //not in receiving mode yet, waiting gor start of packet
-	if(receiving == false)
-	{
-		if(inChar == START_OF_PACKET)
-		{
-			receiving = true;
-			dataPacket = "";
-			dataPacket += inChar;
-			return;
-		}
-	}
+    if (receiving == false)
+    {
+        if (inChar == START_OF_PACKET)
+        {
+            receiving = true;
+            dataPacket = "";
+            dataPacket += inChar;
+            return;
+        }
+    }
 
     //receiving mode
-	else
-	{
-		if(inChar == START_OF_PACKET) //new SOP detected
-		{
-			dataPacket = "";
-		}
-		dataPacket += inChar;
-		if(dataPacket.length() >= PACKET_SIZE) //message is too long
-		{
-			receiving = false;
-			return;
-		}
-		if(inChar == END_OF_PACKET)	//EOP detected
-		{
-			stringParser();	//message parser
-			if(crc[0] != checksum( dataPacket , dataPacket.length()-1-CRC_SIZE ) ) //checksum check
-			{
-				#ifdef AMBUS_DEBUG
-				Serial.print("CRC NOT MATCH: ");
-				Serial.println(checksum( dataPacket , dataPacket.length()-(1+CRC_SIZE) ));
-				#endif
-				address = "";
-				command = "";
-				data = "";
-				crc = "";
-				receiving = false;
-				return;
-			}
-			if(address != deviceAddress)	//address check
-			{
-				#ifdef AMBUS_DEBUG
-				Serial.println("ADDRESS NOT MATCH: ");
-				Serial.println(address);
-				#endif
-				address = "";
-				command = "";
-				data = "";
-				crc = "";
-				receiving = false;
-				return;
-			}
-			dataReady = true;	//message is correct and ready to pickup
-			receiving = false;
-		}
-	}
+    else
+    {
+        if (inChar == START_OF_PACKET) //new SOP detected
+        {
+            dataPacket = "";
+        }
+        dataPacket += inChar;
+        if (dataPacket.length() >= PACKET_SIZE) //message is too long
+        {
+            receiving = false;
+            return;
+        }
+        if (inChar == END_OF_PACKET)    //EOP detected
+        {
+            stringParser();    //message parser
+            if (crc[0] != checksum(dataPacket, dataPacket.length() - 1 - CRC_SIZE)) //checksum check
+            {
+#ifdef AMBUS_DEBUG
+                Serial.print("CRC NOT MATCH: ");
+                Serial.println(checksum(dataPacket, dataPacket.length() - (1 + CRC_SIZE)));
+#endif
+                address = "";
+                command = "";
+                data = "";
+                crc = "";
+                receiving = false;
+                return;
+            }
+            if (address != deviceAddress)    //address check
+            {
+#ifdef AMBUS_DEBUG
+                Serial.println("ADDRESS NOT MATCH: ");
+                Serial.println(address);
+#endif
+                address = "";
+                command = "";
+                data = "";
+                crc = "";
+                receiving = false;
+                return;
+            }
+            dataReady = true;    //message is correct and ready to pickup
+            receiving = false;
+        }
+    }
 }
 
 boolean AMBUS::dataReceived()
 {
-	return dataReady;
+    return dataReady;
 }
 
 String AMBUS::getCommand()
 {
-	return command;
+    return command;
 }
 
 String AMBUS::getData()
 {
-	return data;
+    return data;
 }
 
 void AMBUS::notacknowledge()
 {
-	#ifdef AMBUS_DEBUG
-	Serial.println("NACK");
-	#endif
-	address = "";
-	command = "";
-	data = "";
-	crc = "";
-	dataReady = false;
+#ifdef AMBUS_DEBUG
+    Serial.println("NACK");
+#endif
+    address = "";
+    command = "";
+    data = "";
+    crc = "";
+    dataReady = false;
 }
 
 void AMBUS::acknowledge(String answer)
 {
-	dataPacket = START_OF_PACKET;
-	dataPacket += MASTER_ADDRESS;
-	dataPacket += SEPARATOR;
-	dataPacket += command;
-	dataPacket += SEPARATOR;
-	dataPacket += answer;
-	if(answer != "") dataPacket += SEPARATOR;
-	dataPacket += checksum(dataPacket, dataPacket.length());
-	dataPacket += END_OF_PACKET;
-	Serial.print(dataPacket);
-	address = "";
-	command = "";
-	data = "";
-	crc = "";
-	dataReady = false;
+    dataPacket = START_OF_PACKET;
+    dataPacket += MASTER_ADDRESS;
+    dataPacket += SEPARATOR;
+    dataPacket += command;
+    dataPacket += SEPARATOR;
+    dataPacket += answer;
+    if (answer != "") dataPacket += SEPARATOR;
+    dataPacket += checksum(dataPacket, dataPacket.length());
+    dataPacket += END_OF_PACKET;
+    Serial.print(dataPacket);
+    address = "";
+    command = "";
+    data = "";
+    crc = "";
+    dataReady = false;
 }
 
 void AMBUS::stringParser()
 {
-	unsigned int separatorCounter = 0;
-	unsigned int i = 1;
-	unsigned int j = 0;
-	
-	while(dataPacket[i] != END_OF_PACKET)
-	{
-		if(dataPacket[i] == SEPARATOR)
-		{
-			separatorCounter++;
-			i++;
-			j=0;
-			continue;
-		}
-		
-		switch (separatorCounter)
-		{
-			case 0:		//address
-			if(j >= ADDRESS_SIZE) break;
-			address += dataPacket[i];
-			break;
-			
-			case 1:		//command
-			if(j >= COMMAND_SIZE) break;
-			command += dataPacket[i];
-			break;
-			
-			case 2:		//data
-			if(j >= DATA_SIZE) break;
-			data += dataPacket[i];
-			break;
-			
-			case 3:		//crc
-			if(j >= CRC_SIZE) break;
-			crc += dataPacket[i];			
-			break;
-			
-			default:
-			break;
-		}
-		
-		i++;
-		j++;
-	}
-	
-	//if message doesn't contain DATA
-	if(separatorCounter == 2)
-	{
-		crc = data;
-		data = "";	
-	}
+    unsigned int separatorCounter = 0;
+    unsigned int i = 1;
+    unsigned int j = 0;
+
+    while (dataPacket[i] != END_OF_PACKET)
+    {
+        if (dataPacket[i] == SEPARATOR)
+        {
+            separatorCounter++;
+            i++;
+            j = 0;
+            continue;
+        }
+
+        switch (separatorCounter)
+        {
+        case 0:        //address
+            if (j >= ADDRESS_SIZE) break;
+            address += dataPacket[i];
+            break;
+
+        case 1:        //command
+            if (j >= COMMAND_SIZE) break;
+            command += dataPacket[i];
+            break;
+
+        case 2:        //data
+            if (j >= DATA_SIZE) break;
+            data += dataPacket[i];
+            break;
+
+        case 3:        //crc
+            if (j >= CRC_SIZE) break;
+            crc += dataPacket[i];
+            break;
+
+        default:
+            break;
+        }
+
+        i++;
+        j++;
+    }
+
+    //if message doesn't contain DATA
+    if (separatorCounter == 2)
+    {
+        crc = data;
+        data = "";
+    }
 }
 
 char AMBUS::checksum(String data, unsigned int count)
 {
-	int sum = 0;
-	for(unsigned int i = 0; i < count; i++)
-	{
-		sum = (sum + data[i]) % 255;
-	}
-	if((char)sum == START_OF_PACKET)	return '\x1A';	//reserved character substitution
-	if((char)sum == SEPARATOR)			return '\x1A';	//reserved character substitution
-	else return (char)sum;
+    int sum = 0;
+    for (unsigned int i = 0; i < count; i++)
+    {
+        sum = (sum + data[i]) % 255;
+    }
+    if ((char)sum == START_OF_PACKET)    return '\x1A';    //reserved character substitution
+    if ((char)sum == SEPARATOR)          return '\x1A';    //reserved character substitution
+    else return (char)sum;
 }

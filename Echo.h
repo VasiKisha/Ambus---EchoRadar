@@ -12,17 +12,17 @@
 
 class ECHO
 {
-	public:
-		void begin(byte argServoPin, byte argTrigPin, byte argEchoPin);
-		boolean setAngle(int angle);		// 1 - 179°
-		int getAngle();
-		unsigned int getDuration();
-		unsigned int getDistance();
-	private:
-		Servo servo;
-		byte servoPin;
-		byte trigPin;
-		byte echoPin;
+    public:
+        void begin(byte argServoPin, byte argTrigPin, byte argEchoPin);
+        boolean setAngle(int angle);        // 1 - 179°
+        int getAngle();
+        unsigned int getDuration();
+        unsigned int getDistance();
+    private:
+        Servo servo;
+        byte servoPin;
+        byte trigPin;
+        byte echoPin;
 };
 
 
