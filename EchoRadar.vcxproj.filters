@@ -21,18 +21,18 @@
     <ClInclude Include="__vm\.EchoRadar.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Atmel Studio\7.0\EchoRadar\EchoRadar\blank\ambus.h">
+    <ClInclude Include="ambus.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Atmel Studio\7.0\EchoRadar\EchoRadar\blank\Echo.h">
+    <ClInclude Include="Echo.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Atmel Studio\7.0\EchoRadar\EchoRadar\blank\ambus.cpp">
+    <ClCompile Include="ambus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Atmel Studio\7.0\EchoRadar\EchoRadar\blank\Echo.cpp">
+    <ClCompile Include="Echo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

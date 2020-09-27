@@ -80,13 +80,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Atmel Studio\7.0\EchoRadar\EchoRadar\blank\ambus.h" />
-    <ClInclude Include="..\..\Atmel Studio\7.0\EchoRadar\EchoRadar\blank\Echo.h" />
+    <ClInclude Include="ambus.h" />
+    <ClInclude Include="Echo.h" />
     <ClInclude Include="__vm\.EchoRadar.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Atmel Studio\7.0\EchoRadar\EchoRadar\blank\ambus.cpp" />
-    <ClCompile Include="..\..\Atmel Studio\7.0\EchoRadar\EchoRadar\blank\Echo.cpp" />
+    <ClCompile Include="ambus.cpp" />
+    <ClCompile Include="Echo.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
