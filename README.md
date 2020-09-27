@@ -23,7 +23,7 @@
 | FW?   | get firmware version      |
 | An?   | get servo angle           |
 | An    | set servo angle           |
-| Dur?  | get duration of echo ping |
+| Dur?  | get sound travel duration |
 | Dis?  | get distance to obstacle  |
 
 Device address: ECHO1
