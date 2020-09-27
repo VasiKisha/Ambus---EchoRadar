@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include "ambus.h"
 
-#define AMBUS_DEBUG
+//#define AMBUS_DEBUG
 
 #define MASTER_ADDRESS "MASTER"
 
@@ -43,13 +43,14 @@ AMBUS::AMBUS(String myAddress)
 
 void AMBUS::serialEventHandler()
 {
-	//pokud data nejsou pøeètená tak nepøijímat další
+    //if no data ready, skip
 	if(dataReady == true) return;
 	
-	//naèíst znak z linky
+	//read character 
 	char inChar = (char)Serial.read();
 	
-	if(receiving == false)		//ještì nejsem v pøijímacím módu
+    //not in receiving mode yet, waiting gor start of packet
+	if(receiving == false)
 	{
 		if(inChar == START_OF_PACKET)
 		{
@@ -59,22 +60,24 @@ void AMBUS::serialEventHandler()
 			return;
 		}
 	}
-	else						//pøijímací mód
+
+    //receiving mode
+	else
 	{
-		if(inChar == START_OF_PACKET) //detekován nový SOP
+		if(inChar == START_OF_PACKET) //new SOP detected
 		{
 			dataPacket = "";
 		}
 		dataPacket += inChar;
-		if(dataPacket.length() >= PACKET_SIZE) //pøekroèena maximální délka zprávy
+		if(dataPacket.length() >= PACKET_SIZE) //message is too long
 		{
 			receiving = false;
 			return;
 		}
-		if(inChar == END_OF_PACKET)	//detekován EOP
+		if(inChar == END_OF_PACKET)	//EOP detected
 		{
-			stringParser();			//analýza zprávy
-			if(crc[0] != checksum( dataPacket , dataPacket.length()-1-CRC_SIZE ) ) //kontrola checksum
+			stringParser();	//message parser
+			if(crc[0] != checksum( dataPacket , dataPacket.length()-1-CRC_SIZE ) ) //checksum check
 			{
 				#ifdef AMBUS_DEBUG
 				Serial.print("CRC NOT MATCH: ");
@@ -87,7 +90,7 @@ void AMBUS::serialEventHandler()
 				receiving = false;
 				return;
 			}
-			if(address != deviceAddress)	//kontrola adresy
+			if(address != deviceAddress)	//address check
 			{
 				#ifdef AMBUS_DEBUG
 				Serial.println("ADDRESS NOT MATCH: ");
@@ -100,7 +103,7 @@ void AMBUS::serialEventHandler()
 				receiving = false;
 				return;
 			}
-			dataReady = true;	//pokud se dostanu až jsem jsou data v poøádku a pøipravena k pøedání
+			dataReady = true;	//message is correct and ready to pickup
 			receiving = false;
 		}
 	}
@@ -198,7 +201,7 @@ void AMBUS::stringParser()
 		j++;
 	}
 	
-	//pokud paket neobsahuje DATA
+	//if message doesn't contain DATA
 	if(separatorCounter == 2)
 	{
 		crc = data;
@@ -213,7 +216,7 @@ char AMBUS::checksum(String data, unsigned int count)
 	{
 		sum = (sum + data[i]) % 255;
 	}
-	if((char)sum == START_OF_PACKET)	return '\x1A';	//osetreni zakazaneho znaku
-	if((char)sum == SEPARATOR)			return '\x1A';	//osetreni zakazaneho znaku
+	if((char)sum == START_OF_PACKET)	return '\x1A';	//reserved character substitution
+	if((char)sum == SEPARATOR)			return '\x1A';	//reserved character substitution
 	else return (char)sum;
 }
