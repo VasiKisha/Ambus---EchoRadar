@@ -1,14 +1,6 @@
-//commandy: 
-//DEV?
-//FW?
-//An
-//An?
-//Dur?
-//Dis?
-
-//Název Projektu
+//Device description
 #define DEVICE "Echo Radar"
-//Verze Firmware
+//Firmware version
 #define FIRMWARE "ver. 1.0"
 
 #include "Echo.h"
@@ -17,20 +9,14 @@
 #define ECHOPIN			2
 #define TRIGPIN			3
 #define SERVOPIN		4
-//#define MAX_ANGLE		165
-//#define MIN_ANGLE		15
 #define MEAS_INTERVAL	30
 
+//Device address
 AMBUS ambus("ECHO1");
 ECHO echo;
 
-//byte angle = MIN_ANGLE;
-//boolean direction = 0;	// 1 - decrease, 0 - encrease;
-//boolean sweep = 0;
-//unsigned int duration;
 unsigned long previousMillis;
 unsigned long currentMillis;
-//unsigned int container[MAX_ANGLE - MIN_ANGLE];
 String stringTemp;
 int intTemp;
 boolean bTemp;
@@ -83,8 +69,6 @@ void loop()
 			ambus.notacknowledge();
 		}
 	}
-
-	//delay(30);
 
 	if (currentMillis - previousMillis >= MEAS_INTERVAL)
 	{
