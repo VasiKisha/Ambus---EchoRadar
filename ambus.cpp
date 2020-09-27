@@ -2,7 +2,7 @@
  * ambus.cpp
  *
  * Created: 02.07.2016 9:13:05
- *  Author: vlast
+ * Author: VasiKisha
  */ 
 
 #include <Arduino.h>
@@ -13,14 +13,14 @@
 #define MASTER_ADDRESS "MASTER"
 
 //PACKET DEFINITIONS
-#define START_OF_PACKET	'$'
-#define SEPARATOR		';'
-#define END_OF_PACKET	'\n'
-#define ADDRESS_SIZE	8
-#define COMMAND_SIZE	8
-#define DATA_SIZE		32
-#define CRC_SIZE		1
-#define PACKET_SIZE		ADDRESS_SIZE + COMMAND_SIZE + DATA_SIZE + CRC_SIZE + 5
+#define START_OF_PACKET '$'
+#define SEPARATOR       ';'
+#define END_OF_PACKET   '\n'
+#define ADDRESS_SIZE    8
+#define COMMAND_SIZE    8
+#define DATA_SIZE       32
+#define CRC_SIZE        1
+#define PACKET_SIZE     ADDRESS_SIZE + COMMAND_SIZE + DATA_SIZE + CRC_SIZE + 5
 
 AMBUS::AMBUS(String myAddress)
 {
