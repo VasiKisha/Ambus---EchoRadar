@@ -218,5 +218,6 @@ char AMBUS::checksum(String data, unsigned int count)
     }
     if ((char)sum == START_OF_PACKET)    return '\x1A';    //reserved character substitution
     if ((char)sum == SEPARATOR)          return '\x1A';    //reserved character substitution
+    if ((char)sum == END_OF_PACKET)      return '\x1A';    //reserved character substitution
     else return (char)sum;
 }
