@@ -1,3 +1,9 @@
+//Copyright (c) 2020 VasiKisha
+//All rights reserved.
+
+//This source code is licensed under the MIT-style license found in the
+//LICENSE file in the root directory of this source tree. 
+
 /*
  * Echo.h
  *
@@ -14,7 +20,7 @@ class ECHO
 {
     public:
         void begin(byte argServoPin, byte argTrigPin, byte argEchoPin);
-        boolean setAngle(int angle);        // 1 - 179°
+        boolean setAngle(int angle);        // 1 - 179Â°
         int getAngle();
         unsigned int getDuration();
         unsigned int getDistance();
