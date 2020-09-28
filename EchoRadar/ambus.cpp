@@ -222,7 +222,7 @@ char AMBUS::checksum(String data, unsigned int count)
     {
         sum = (sum + data[i]) % 255;
     }
-    if ((char)sum == END_OF_PACKET || (char)sum == SEPARATOR || (char)sum == END_OF_PACKET)
+    if ((char)sum == START_OF_PACKET || (char)sum == SEPARATOR || (char)sum == END_OF_PACKET)
     {
         sum += 0x80;
     }
