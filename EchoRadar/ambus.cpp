@@ -222,8 +222,9 @@ char AMBUS::checksum(String data, unsigned int count)
     {
         sum = (sum + data[i]) % 255;
     }
-    if ((char)sum == START_OF_PACKET)    return '\x1A';    //reserved character substitution
-    if ((char)sum == SEPARATOR)          return '\x1A';    //reserved character substitution
-    if ((char)sum == END_OF_PACKET)      return '\x1A';    //reserved character substitution
+    if ((char)sum == END_OF_PACKET || (char)sum == SEPARATOR || (char)sum == END_OF_PACKET)
+    {
+        sum += 0x80;
+    }
     else return (char)sum;
 }
