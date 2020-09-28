@@ -14,7 +14,7 @@ class ECHO
 {
     public:
         void begin(byte argServoPin, byte argTrigPin, byte argEchoPin);
-        boolean setAngle(int angle);        // 1 - 179°
+        boolean setAngle(int angle);        // 1 - 179Â°
         int getAngle();
         unsigned int getDuration();
         unsigned int getDistance();
