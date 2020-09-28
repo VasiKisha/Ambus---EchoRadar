@@ -27,3 +27,5 @@
 | Dis?  | get distance to obstacle  |
 
 Device address: ECHO1
+
+See [Ambus protocol description](https://github.com/VasiKisha/Ambus/blob/master/README.md) for more details.
