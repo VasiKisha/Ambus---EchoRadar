@@ -153,7 +153,10 @@ void AMBUS::acknowledge(String answer)
     if (answer != "") dataPacket += SEPARATOR;
     dataPacket += checksum(dataPacket, dataPacket.length());
     dataPacket += END_OF_PACKET;
+    digitalWrite(DIRECTIONPIN, HIGH);
     Serial.print(dataPacket);
+    Serial.flush();
+    digitalWrite(DIRECTIONPIN, LOW);
     address = "";
     command = "";
     data = "";

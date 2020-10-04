@@ -14,6 +14,8 @@
 #ifndef AMBUS_H_
 #define AMBUS_H_
 
+#define DIRECTIONPIN    5
+
 class AMBUS
 {
     public:    
