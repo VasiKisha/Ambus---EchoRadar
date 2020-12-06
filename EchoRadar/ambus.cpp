@@ -14,7 +14,7 @@
 #include <Arduino.h>
 #include "ambus.h"
 
- //#define AMBUS_DEBUG
+//#define AMBUS_DEBUG
 
 #define MASTER_ADDRESS "MASTER"
 
@@ -89,6 +89,10 @@ void AMBUS::serialEventHandler()
                 Serial.print("CRC NOT MATCH: ");
                 Serial.println(checksum(dataPacket, dataPacket.length() - (1 + CRC_SIZE)));
 #endif
+                command = "ERROR";  
+                String crcsum = "CRC NOT MATCH:  ";
+                crcsum[15] = checksum(dataPacket, dataPacket.length() - (1 + CRC_SIZE));
+                acknowledge(crcsum);
                 address = "";
                 command = "";
                 data = "";
@@ -102,6 +106,8 @@ void AMBUS::serialEventHandler()
                 Serial.println("ADDRESS NOT MATCH: ");
                 Serial.println(address);
 #endif
+                //command = "ERROR";
+                //acknowledge("ADDRESS NOT MATCH: " + address);
                 address = "";
                 command = "";
                 data = "";
@@ -153,7 +159,8 @@ void AMBUS::acknowledge(String answer)
     if (answer != "") dataPacket += SEPARATOR;
     dataPacket += checksum(dataPacket, dataPacket.length());
     dataPacket += END_OF_PACKET;
-    digitalWrite(DIRECTIONPIN, HIGH);
+    //delay(4); // na RX vysí po skonèení pøijmu nìjak moc dlouho HIGH...
+    digitalWrite(DIRECTIONPIN, HIGH);;
     Serial.print(dataPacket);
     Serial.flush();
     digitalWrite(DIRECTIONPIN, LOW);
@@ -229,5 +236,5 @@ char AMBUS::checksum(String data, unsigned int count)
     {
         sum += 0x80;
     }
-    else return (char)sum;
+    return (char)sum;
 }
