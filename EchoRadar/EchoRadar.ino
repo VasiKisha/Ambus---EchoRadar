@@ -33,6 +33,8 @@ void setup()
     pinMode(ECHOPIN, INPUT);
     pinMode(TRIGPIN, OUTPUT);
     pinMode(SERVOPIN, OUTPUT);
+    pinMode(DIRECTIONPIN, OUTPUT);
+    digitalWrite(DIRECTIONPIN, LOW);
     echo.begin(SERVOPIN, TRIGPIN, ECHOPIN);
 }
 
