@@ -18,7 +18,7 @@
 #define MEAS_INTERVAL   30
 
 //Device address
-AMBUS ambus("ECHO1");
+AMBUS ambus("ECHO1", 5);
 ECHO echo;
 
 unsigned long previousMillis;
@@ -33,8 +33,6 @@ void setup()
     pinMode(ECHOPIN, INPUT);
     pinMode(TRIGPIN, OUTPUT);
     pinMode(SERVOPIN, OUTPUT);
-    pinMode(DIRECTIONPIN, OUTPUT);
-    digitalWrite(DIRECTIONPIN, LOW);
     echo.begin(SERVOPIN, TRIGPIN, ECHOPIN);
 }
 
